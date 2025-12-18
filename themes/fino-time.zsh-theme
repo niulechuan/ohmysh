@@ -27,27 +27,20 @@ function box_name {
 
 function python_prompt_info {
     if type python >/dev/null 2>&1; then
-        echo "(Py: %{$fg_bold[green]%}$(python -c 'import platform; print(platform.python_version())')%{$reset_color%}) "
+        echo "(P: %{$fg_bold[green]%}$(python -c 'import platform; print(platform.python_version())')%{$reset_color%}) "
     fi
 }
 
 function nvm_prompt_info {
     if type node >/dev/null 2>&1; then
-        echo "(NVM: %{$fg_bold[cyan]%}$(node -v)%{$reset_color%}) "
+        echo "(N: %{$fg_bold[cyan]%}$(node -v)%{$reset_color%}) "
     fi
 }
 
 function java_prompt_info {
-    local sdk_java_dir="$HOME/.sdkman/candidates/java"
-    if [ -d "$sdk_java_dir" ]; then
-        local current=$(basename $(readlink "$sdk_java_dir/current") 2>/dev/null)
-        # 获取所有文件夹并拼接成字符串
-        local all_vers=$(ls -1 "$sdk_java_dir" | grep -v "current" | tr '\n' '|' | sed 's/|$//')
-
-        # 将当前版本高亮
-        all_vers=${all_vers//$current/%{$fg_bold[red]%}$current%{$reset_color%}}
-
-        echo "(Java: ${all_vers}) "
+    if type java >/dev/null 2>&1; then
+        local java_ver=$(java -version 2>&1 | awk -F '"' '/version/ {print $2}')
+        echo "(J: %{$fg_bold[red]%}${java_ver}%{$reset_color%}) "
     fi
 }
 
