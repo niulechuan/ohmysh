@@ -69,10 +69,10 @@ function water_prompt_info {
     # 根据杯数设置颜色
     if [ $count -ge 6 ]; then
         # 大于等于6杯，绿色
-        echo "(%{$FG[046]%}${count}杯🟢%{$reset_color%})"
+        echo "(%{$FG[046]%}W: ${count}杯🟢%{$reset_color%})"
     else
         # 小于6杯，红色
-        echo "(%{$FG[196]%}${count}杯⭕️%{$reset_color%})"
+        echo "(%{$FG[196]%}W: ${count}杯⭕️%{$reset_color%})"
     fi
 }
 
