@@ -51,9 +51,34 @@ function days_remaining {
     echo "%{$FG[242]%}📅 ${diff}d%{$reset_color%} "
 }
 
+# --- 喝水状态函数 ---
+function water_prompt_info {
+    local water_file="$HOME/.water_count"
+    local count=0
+
+    # 读取喝水记录
+    if [ -f "$water_file" ]; then
+        count=$(cat "$water_file" 2>/dev/null)
+    fi
+
+    # 如果文件不存在或内容为空
+    if [ -z "$count" ] || ! [[ "$count" =~ ^[0-9]+$ ]]; then
+        count=0
+    fi
+
+    # 根据杯数设置颜色
+    if [ $count -ge 6 ]; then
+        # 大于等于6杯，绿色
+        echo "(%{$FG[046]%}${count}杯🟢%{$reset_color%})"
+    else
+        # 小于6杯，红色
+        echo "(%{$FG[196]%}${count}杯⭕️%{$reset_color%})"
+    fi
+}
+
 # --- 最终 PROMPT 定义 ---
 PROMPT="╭─ %{$FG[040]%}%n%{$reset_color%} 🤙 %{$FG[033]%}$(box_name)%{$reset_color%} %{$FG[239]%}in%{$reset_color%} %{$terminfo[bold]$FG[226]%}%~%{$reset_color%}\$(git_prompt_info) \$(days_remaining)
-|    \$(prompt_char)\$(python_prompt_info)\$(nvm_prompt_info)\$(java_prompt_info)\$(virtualenv_info)
+|    \$(prompt_char)\$(python_prompt_info)\$(nvm_prompt_info)\$(java_prompt_info)\$(virtualenv_info)\$(water_prompt_info)
 ╰─ >>> "
 
 # --- Git & Ruby 样式 (保持不变) ---
