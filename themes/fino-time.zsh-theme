@@ -13,7 +13,11 @@
 
 # --- 环境信息获取函数 ---
 function virtualenv_info {
-    [ $VIRTUAL_ENV ] && echo '('`basename $VIRTUAL_ENV`') '
+    if [ -n "$CONDA_DEFAULT_ENV" ]; then
+        echo "(C: %{$fg_bold[yellow]%}${CONDA_DEFAULT_ENV}%{$reset_color%}) "
+    elif [ -n "$VIRTUAL_ENV" ]; then
+        echo "(V: %{$fg_bold[yellow]%}$(basename $VIRTUAL_ENV)%{$reset_color%}) "
+    fi
 }
 
 function prompt_char {
