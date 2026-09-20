@@ -11,14 +11,7 @@
 #
 # Also borrowing from http://stevelosh.com/blog/2010/02/my-extravagant-zsh-prompt/
 
-# --- 环境信息获取函数 ---
-function virtualenv_info {
-    if [ -n "$CONDA_DEFAULT_ENV" ]; then
-        echo "(C: %{$fg_bold[yellow]%}${CONDA_DEFAULT_ENV}%{$reset_color%}) "
-    elif [ -n "$VIRTUAL_ENV" ]; then
-        echo "(V: %{$fg_bold[yellow]%}$(basename $VIRTUAL_ENV)%{$reset_color%}) "
-    fi
-}
+
 
 function prompt_char {
     git branch >/dev/null 2>/dev/null && echo 'GIT ' && return
@@ -31,7 +24,14 @@ function box_name {
 
 function python_prompt_info {
     if type python >/dev/null 2>&1; then
-        echo "(P: %{$fg_bold[green]%}$(python -c 'import platform; print(platform.python_version())')%{$reset_color%}) "
+        local py_ver=$(python -c 'import platform; print(platform.python_version())')
+        local py_env=""
+        if [ -n "$CONDA_DEFAULT_ENV" ]; then
+            py_env="%{$FG[242]%}@%{$reset_color%}%{$fg_bold[yellow]%}${CONDA_DEFAULT_ENV}%{$reset_color%}"
+        elif [ -n "$VIRTUAL_ENV" ]; then
+            py_env="%{$FG[242]%}@%{$reset_color%}%{$fg_bold[yellow]%}$(basename $VIRTUAL_ENV)%{$reset_color%}"
+        fi
+        echo "(P: %{$fg_bold[green]%}${py_ver}%{$reset_color%}${py_env}) "
     fi
 }
 
@@ -75,7 +75,7 @@ function water_prompt_info {
 
 # --- 最终 PROMPT 定义 ---
 PROMPT="╭─ %{$FG[040]%}%n%{$reset_color%} 🤙 %{$FG[033]%}$(box_name)%{$reset_color%} %{$FG[239]%}in%{$reset_color%} %{$terminfo[bold]$FG[040]%}%~%{$reset_color%}\$(git_prompt_info) \$(days_remaining)
-|    \$(prompt_char)\$(python_prompt_info)\$(nvm_prompt_info)\$(java_prompt_info)\$(virtualenv_info)\$(water_prompt_info)
+|    \$(prompt_char)\$(python_prompt_info)\$(nvm_prompt_info)\$(java_prompt_info)\$(water_prompt_info)
 ╰─ >>> "
 
 # --- Git & Ruby 样式 (保持不变) ---
